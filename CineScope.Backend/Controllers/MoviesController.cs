@@ -1,14 +1,16 @@
 
+using CineScope.Backend.Data;
+using CineScope.Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CineScope.Backend.Models;
-using CineScope.Backend.Data;
 
+[Authorize(Roles = "Admin")]
 public class MoviesController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly CineScopeBackendContext _context;
 
-    public MoviesController(ApplicationDbContext context)
+    public MoviesController(CineScopeBackendContext context)
     {
         _context = context;
     }

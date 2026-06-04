@@ -1,0 +1,50 @@
+﻿@model CineScope.Backend.Models.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Your Profile";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Your Profile</h3>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Email</div>
+                <div class="col-md-9">@Model.Email</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Username</div>
+                <div class="col-md-9">@Model.UserName</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Phone</div>
+                <div class="col-md-9">@Model.PhoneNumber</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Roles</div>
+                <div class="col-md-9">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <span class="badge bg-primary me-1">@role</span>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-outline-dark">
+                    Manage Account
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,74 +1,68 @@
-﻿@model IEnumerable<CineScope.Backend.Models.Movie>
+﻿@model CineScope.Backend.Controllers.HomeViewModel
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "CineScope – Movies";
 }
 
-<!-- ⭐ FULL-WIDTH CAROUSEL SLIDER -->
-<div id="cineCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+<div class="container mt-4">
 
-    <!-- Indicators -->
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="2"></button>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-light">Movies</h2>
+
+        <!-- Genre Filter -->
+        <form method="get" class="d-flex">
+            <select name="genre" class="form-select me-2" onchange="this.form.submit()">
+                <option value="">All Genres</option>
+
+                @foreach (var g in Model.Genres)
+                {
+                    <option value="@g" selected="@(g == Model.SelectedGenre)">
+                        @g
+                    </option>
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
     </div>
 
-    <!-- Slides -->
-    <div class="carousel-inner">
+    <!-- Movie Grid -->
+    <div class="row g-4">
+        @foreach (var movie in Model.Movies)
+        {
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-dark text-white shadow-sm movie-card h-100">
 
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-            <img src="https://images.unsplash.com/photo-1601933470928-c1e8f7f5a99a"
-                 class="d-block w-100"
-                 style="height: 70vh; object-fit: cover;" />
-            <div class="carousel-caption text-start">
-                <h1 class="fw-bold">Dune 2</h1>
-                <p>The battle for Arrakis begins…</p>
-                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
+                    <!-- Poster -->
+                    <img src="@movie.PosterUrl" class="card-img-top" alt="@movie.Title" />
+
+                    <div class="card-body">
+                        <h5 class="card-title">@movie.Title</h5>
+                        <p class="card-text text-secondary">@movie.Genre</p>
+                    </div>
+
+                    <div class="card-footer border-0 bg-transparent">
+                        <a href="/Movies/Details/@movie.Id" class="btn btn-outline-light w-100">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
             </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4"
-                 class="d-block w-100"
-                 style="height: 70vh; object-fit: cover;" />
-            <div class="carousel-caption text-start">
-                <h1 class="fw-bold">Interstellar</h1>
-                <p>Go beyond the stars.</p>
-                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
-            </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-            <img src="https://images.unsplash.com/photo-1505685296765-3a2736de412f"
-                 class="d-block w-100"
-                 style="height: 70vh; object-fit: cover;" />
-            <div class="carousel-caption text-start">
-                <h1 class="fw-bold">Oppenheimer</h1>
-                <p>The world forever changed.</p>
-                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
-            </div>
-        </div>
-
+        }
     </div>
-
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#cineCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-
-    <button class="carousel-control-next" type="button" data-bs-target="#cineCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
 
 </div>
 
+<!-- Optional hover animation -->
 <style>
-    .carousel-caption {
-        bottom: 20%;
-        text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    .movie-card {
+        transition: transform .2s ease, box-shadow .2s ease;
     }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
 </style>
