@@ -1,0 +1,43 @@
+<h1>Manage Movies</h1>
+
+<form method="get" class="mb-3">
+    <input type="text"
+           name="search"
+           value="@Context.Request.Query["search"]"
+           class="form-control"
+           placeholder="Search by title..." />
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+ Add New Movie</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Year</th>
+            <th>Rating</th>
+            <th>Duration</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Genre</td>
+                <td>@movie.ReleaseYear</td>
+                <td>@movie.Rating</td>
+                <td>@movie.Duration min</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
