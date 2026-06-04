@@ -1,43 +1,69 @@
-<h1>Manage Movies</h1>
+@model IEnumerable<CineScope.Backend.Models.Movie>
 
-<form method="get" class="mb-3">
-    <input type="text"
-           name="search"
-           value="@Context.Request.Query["search"]"
-           class="form-control"
-           placeholder="Search by title..." />
-</form>
+@{
+    ViewData["Title"] = "Movies";
+}
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">+ Add New Movie</a>
-</p>
+<div class="container mt-4">
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Release Year</th>
-            <th>Rating</th>
-            <th>Duration</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var movie in Model)
-        {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Manage Movies</h2>
+        <a asp-action="Create" class="btn btn-primary px-4">+ Add Movie</a>
+    </div>
+
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text"
+                   name="search"
+                   value="@Context.Request.Query["search"]"
+                   class="form-control"
+                   placeholder="Search by title..." />
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <table class="table table-hover shadow-sm rounded">
+        <thead class="table-light">
             <tr>
-                <td>@movie.Title</td>
-                <td>@movie.Genre</td>
-                <td>@movie.ReleaseYear</td>
-                <td>@movie.Rating</td>
-                <td>@movie.Duration min</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-danger">Delete</a>
-                </td>
+                <th>Poster</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Year</th>
+                <th>Rating</th>
+                <th>Duration</th>
+                <th style="width: 180px;"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                        {
+                            <img src="@movie.PosterUrl" alt="@movie.Title"
+                                 style="height: 60px; width: 40px; object-fit: cover; border-radius: 4px;" />
+                        }
+                        else
+                        {
+                            <div style="height: 60px; width: 40px; background: #e9ecef; border-radius: 4px;"></div>
+                        }
+                    </td>
+
+                    <td class="fw-semibold">@movie.Title</td>
+                    <td>@movie.Genre</td>
+                    <td>@movie.ReleaseYear</td>
+                    <td>@movie.Rating</td>
+                    <td>@movie.Duration min</td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-warning me-1">Edit</a>
+                        <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-info me-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
