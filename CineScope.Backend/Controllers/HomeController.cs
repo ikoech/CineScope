@@ -1,32 +1,37 @@
-using CineScope.Backend.Models;
+using CineScope.Backend.Data;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
-namespace CineScope.Backend.Controllers
+namespace CineScope.Backend.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ApplicationDbContext context)
     {
-        private readonly ILogger<HomeController> _logger;
+        _context = context;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index(string? genre)
+    {
+        // Start with all movies
+        var movies = _context.Movies.AsQueryable();
+
+        // Apply genre filter if selected
+        if (!string.IsNullOrEmpty(genre))
         {
-            _logger = logger;
+            movies = movies.Where(m => m.Genre == genre);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        // Load movies ordered by rating
+        var movieList = await movies
+            .OrderByDescending(m => m.Rating)
+            .ToListAsync();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        // Pass selected genre to the view
+        ViewBag.SelectedGenre = genre;
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        return View(movieList);
     }
 }

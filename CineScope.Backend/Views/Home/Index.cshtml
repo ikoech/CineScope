@@ -1,8 +1,74 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<CineScope.Backend.Models.Movie>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- ⭐ FULL-WIDTH CAROUSEL SLIDER -->
+<div id="cineCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#cineCarousel" data-bs-slide-to="2"></button>
+    </div>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+            <img src="https://images.unsplash.com/photo-1601933470928-c1e8f7f5a99a"
+                 class="d-block w-100"
+                 style="height: 70vh; object-fit: cover;" />
+            <div class="carousel-caption text-start">
+                <h1 class="fw-bold">Dune 2</h1>
+                <p>The battle for Arrakis begins…</p>
+                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4"
+                 class="d-block w-100"
+                 style="height: 70vh; object-fit: cover;" />
+            <div class="carousel-caption text-start">
+                <h1 class="fw-bold">Interstellar</h1>
+                <p>Go beyond the stars.</p>
+                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1505685296765-3a2736de412f"
+                 class="d-block w-100"
+                 style="height: 70vh; object-fit: cover;" />
+            <div class="carousel-caption text-start">
+                <h1 class="fw-bold">Oppenheimer</h1>
+                <p>The world forever changed.</p>
+                <a href="#" class="btn btn-primary btn-lg">Watch Now</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#cineCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#cineCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+
 </div>
+
+<style>
+    .carousel-caption {
+        bottom: 20%;
+        text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+</style>

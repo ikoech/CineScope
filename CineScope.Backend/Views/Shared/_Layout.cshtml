@@ -9,27 +9,62 @@
     <link rel="stylesheet" href="~/CineScope.Backend.styles.css" asp-append-version="true" />
 </head>
 <body>
+
+    <!-- ⭐ Dark Mode Toggle Button -->
+    <button id="darkToggle" class="btn btn-sm btn-dark position-fixed"
+            style="top: 20px; right: 20px; z-index: 999;">
+        Dark Mode
+    </button>
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CineScope.Backend</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+            <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                CINE SCOPE
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cineNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="cineNavbar">
+
+                <!-- Left Menu -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Movies" asp-action="Index">Movies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Movies" asp-action="Index" asp-route-genre="Action">Action</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Movies" asp-action="Index" asp-route-genre="Drama">Drama</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Movies" asp-action="Index" asp-route-genre="Sci-Fi">Sci‑Fi</a>
+                    </li>
+                </ul>
+
+                <!-- Search Bar -->
+                <form class="d-flex me-3" method="get" asp-controller="Movies" asp-action="Index">
+                    <input class="form-control me-2" type="search" name="search" placeholder="Search movies...">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </form>
+
+                <!-- Profile Icon -->
+                <div>
+                    <a href="#" class="btn btn-outline-light rounded-circle px-3 py-2">
+                        <i class="bi bi-person"></i>
+                    </a>
                 </div>
+
             </div>
         </nav>
+
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -41,6 +76,38 @@
             &copy; 2026 - CineScope.Backend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- ⭐ Dark Mode CSS + Script -->
+    <style>
+            .dark-mode {
+                background-color: #121212 !important;
+                color: white !important;
+            }
+
+                .dark-mode .navbar,
+                .dark-mode footer {
+                    background-color: #1e1e1e !important;
+                    color: white !important;
+                }
+
+                .dark-mode .nav-link {
+                    color: #ddd !important;
+                }
+
+                .dark-mode .movie-card,
+                .dark-mode .card {
+                    background-color: #1e1e1e !important;
+                    color: white !important;
+                }
+    </style>
+
+    <script>
+            const toggle = document.getElementById("darkToggle");
+            toggle.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+            });
+    </script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
