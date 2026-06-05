@@ -11,7 +11,7 @@
 
                 <div class="movie-overlay">
                     <h5>@fav.Movie.Title</h5>
-                    <p>@fav.Movie.Genre • @fav.Movie.ReleaseYear</p>
+                    <p>@fav.Movie.Genre?.Name • @fav.Movie.ReleaseYear</p>
 
                     <form asp-controller="Favorites" asp-action="Remove" method="post">
                         <input type="hidden" name="movieId" value="@fav.Movie.Id" />

@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using CineScope.Backend.Data;
 using CineScope.Backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 public class MoviesController : Controller
 {
@@ -70,6 +71,7 @@ public class MoviesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
 
@@ -82,7 +84,7 @@ public class MoviesController : Controller
         var movie = await _context.Movies.FindAsync(id);
         if (movie == null)
             return NotFound();
-
+        ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
 
@@ -99,6 +101,7 @@ public class MoviesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
 

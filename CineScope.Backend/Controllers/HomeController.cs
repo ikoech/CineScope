@@ -18,18 +18,20 @@ namespace CineScope.Backend.Controllers
         // --------------------------------------------------
         public async Task<IActionResult> Index(string? genre)
         {
-            // Start with all movies
-            var movies = _context.Movies.AsQueryable();
+            // Load movies with Genre included
+            var movies = _context.Movies
+                .Include(m => m.Genre)
+                .AsQueryable();
 
-            // Apply genre filter if selected
+            // Apply genre filter (NEW relational model)
             if (!string.IsNullOrEmpty(genre))
             {
-                movies = movies.Where(m => m.Genre == genre);
+                movies = movies.Where(m => m.Genre.Name == genre);
             }
 
-            // Load distinct genres for dropdown/filter UI
-            var genres = await _context.Movies
-                .Select(m => m.Genre)
+            // Load distinct genre names for dropdown
+            var genres = await _context.Genres
+                .Select(g => g.Name)
                 .Distinct()
                 .ToListAsync();
 
@@ -55,43 +57,3 @@ namespace CineScope.Backend.Controllers
         public string? SelectedGenre { get; set; }
     }
 }
-
-
-/*using CineScope.Backend.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace CineScope.Backend.Controllers;
-
-public class HomeController : Controller
-{
-    private readonly CineScopeBackendContext _context;
-
-    public HomeController(CineScopeBackendContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<IActionResult> Index(string? genre)
-    {
-        // Start with all movies
-        var movies = _context.Movies.AsQueryable();
-
-        // Apply genre filter if selected
-        if (!string.IsNullOrEmpty(genre))
-        {
-            movies = movies.Where(m => m.Genre == genre);
-        }
-
-        // Load movies ordered by rating
-        var movieList = await movies
-            .OrderByDescending(m => m.Rating)
-            .ToListAsync();
-
-        // Pass selected genre to the view
-        ViewBag.SelectedGenre = genre;
-
-        return View(movieList);
-    }
-}
-*/

@@ -1,0 +1,26 @@
+﻿@model Genre
+
+<h2>@Model.Name</h2>
+
+@if (Model.Movies == null || !Model.Movies.Any())
+{
+    <p class="text-muted">No movies in this genre yet.</p>
+}
+else
+{
+    <div class="row mt-4">
+        @foreach (var movie in Model.Movies)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm">
+                    <img src="@movie.PosterUrl" class="card-img-top" />
+                    <div class="card-body">
+                        <h5>@movie.Title</h5>
+                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id"
+                           class="btn btn-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
