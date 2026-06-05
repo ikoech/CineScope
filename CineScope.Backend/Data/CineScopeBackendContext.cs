@@ -10,6 +10,7 @@ public class CineScopeBackendContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    // Your DbSets here
+    //DbSets here
      public DbSet<Movie> Movies { get; set; }
+     public DbSet<FavoriteMovie> FavoriteMovies { get; set; }
 }

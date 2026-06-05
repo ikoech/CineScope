@@ -14,6 +14,20 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
+            /* Ensure footer stays at bottom */
+            html, body {
+                height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+            }
+
+            main {
+                flex: 1;
+            }
+
             /* Light Mode */
             body.light-mode {
                 background-color: #ffffff !important;
@@ -36,12 +50,6 @@
                     color: #ddd !important;
                 }
 
-                body.dark-mode .card,
-                body.dark-mode .movie-card {
-                    background-color: #1e1e1e !important;
-                    color: white !important;
-                }
-
             /* Footer */
             footer {
                 background-color: #f8f9fa;
@@ -57,14 +65,14 @@
 
 <body>
 
-    <!-- ⭐ Dark Mode Toggle Button -->
+    <!-- Dark Mode Toggle Button -->
     <button id="darkToggle"
             class="btn btn-dark rounded-circle shadow position-fixed"
-            style="top: 20px; right: 20px; width: 48px; height: 48px; z-index: 999;">
+            style="top: 90px; right: 20px; width: 48px; height: 48px; z-index: 999;">
         🌙
     </button>
 
-    <!-- ⭐ NAVBAR -->
+    <!-- NAVBAR -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
             <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
@@ -79,9 +87,18 @@
 
                 <!-- Left Menu -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    @if (User.IsInRole("Member"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Favorites" asp-action="MyFavorites">My Favorites</a>
+                        </li>
+                    }
+
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Movies" asp-action="Index">Movies</a>
                     </li>
@@ -101,24 +118,21 @@
     </header>
 
     <!-- MAIN CONTENT -->
-    <div class="container mt-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main class="container mt-4">
+        @RenderBody()
+    </main>
 
-    <!-- ⭐ FOOTER -->
-    <footer class="footer mt-5 py-3 text-center">
+    <!-- FOOTER (always at bottom) -->
+    <footer class="footer py-3 text-center mt-auto">
         <div class="container">
             <span>&copy; 2026 - CineScope</span>
         </div>
     </footer>
 
-    <!-- ⭐ Dark Mode Script -->
+    <!-- Dark Mode Script -->
     <script>
             const toggleBtn = document.getElementById("darkToggle");
 
-            // Load saved theme
             const savedTheme = localStorage.getItem("theme") || "dark-mode";
             document.body.classList.add(savedTheme);
 

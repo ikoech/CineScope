@@ -1,0 +1,24 @@
+﻿@model IEnumerable<FavoriteMovie>
+
+<h2 class="mb-4">My Favorite Movies</h2>
+
+<div class="movie-grid">
+    @foreach (var fav in Model)
+    {
+        <div class="movie-card">
+            <a asp-controller="Movies" asp-action="Details" asp-route-id="@fav.Movie.Id">
+                <img src="@fav.Movie.PosterUrl" class="movie-poster" />
+
+                <div class="movie-overlay">
+                    <h5>@fav.Movie.Title</h5>
+                    <p>@fav.Movie.Genre • @fav.Movie.ReleaseYear</p>
+
+                    <form asp-controller="Favorites" asp-action="Remove" method="post">
+                        <input type="hidden" name="movieId" value="@fav.Movie.Id" />
+                        <button class="btn btn-danger btn-sm mt-2">Remove</button>
+                    </form>
+                </div>
+            </a>
+        </div>
+    }
+</div>

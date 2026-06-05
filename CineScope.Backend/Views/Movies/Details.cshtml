@@ -37,7 +37,21 @@
 
 <hr />
 
-<!-- ⭐ Member + Admin actions -->
+<!--  Add to Favorites Form -->
+@if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
+{
+    <form asp-controller="Favorites" asp-action="Add" method="post">
+        <input type="hidden" name="movieId" value="@Model.Id" />
+
+        <!-- ⭐ Clean, modern favorites button -->
+        <button class="btn btn-warning mt-3">
+            ⭐ Add to Favorites
+        </button>
+    </form>
+}
+
+
+<!--  Member + Admin actions -->
 @if (User.IsInRole("Member") || User.IsInRole("Admin"))
 {
     <div class="mb-3">
@@ -47,7 +61,7 @@
     </div>
 }
 
-<!-- ⭐ Admin-only actions -->
+<!--  Admin-only actions -->
 @if (User.IsInRole("Admin"))
 {
     <div class="mb-3">
