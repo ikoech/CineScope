@@ -48,6 +48,9 @@ public class MoviesController : Controller
         if (movie == null)
             return NotFound();
 
+        // ⭐ Fetch extra images
+        ViewBag.ExtraImages = await _tmdb.GetExtraImagesAsync(movie.Title);
+
         return View(movie);
     }
 

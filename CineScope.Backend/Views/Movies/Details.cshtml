@@ -124,3 +124,15 @@ else
 {
     <p class="text-muted mt-3">Login as a Member to write a review.</p>
 }
+@if (ViewBag.ExtraImages != null)
+{
+    <h3 class="mt-4">More Images</h3>
+    <div class="row">
+        @foreach (var img in ViewBag.ExtraImages)
+        {
+            <div class="col-md-3 mb-3">
+                <img src="@img" class="img-fluid rounded shadow-sm" />
+            </div>
+        }
+    </div>
+}
