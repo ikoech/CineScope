@@ -57,7 +57,9 @@
             <!-- POSTER URL -->
             <div class="form-group mb-3">
                 <label asp-for="PosterUrl" class="control-label"></label>
-                <input asp-for="PosterUrl" class="form-control" />
+                <input asp-for="PosterUrl"
+                       class="form-control"
+                       placeholder="Leave empty to auto‑fetch from TMDB" />
                 <span asp-validation-for="PosterUrl" class="text-danger"></span>
             </div>
 

@@ -23,6 +23,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+builder.Services.AddHttpClient<TmdbService>();
+
+
 // Email sender (no-op for now)
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 

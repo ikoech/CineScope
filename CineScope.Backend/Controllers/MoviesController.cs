@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 public class MoviesController : Controller
 {
     private readonly CineScopeBackendContext _context;
+    private readonly TmdbService _tmdb;
 
-    public MoviesController(CineScopeBackendContext context)
+    public MoviesController(CineScopeBackendContext context, TmdbService tmdb)
     {
         _context = context;
+        _tmdb = tmdb;
     }
 
     // ============================
     // PUBLIC PAGES (Everyone)
     // ============================
 
-    // Public movie list
     [AllowAnonymous]
     public async Task<IActionResult> Index(string search)
     {
@@ -33,7 +34,6 @@ public class MoviesController : Controller
         return View(await movies.ToListAsync());
     }
 
-    // Public movie details
     [AllowAnonymous]
     public async Task<IActionResult> Details(int? id)
     {
@@ -58,6 +58,7 @@ public class MoviesController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
+        ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name");
         return View();
     }
 
@@ -67,10 +68,19 @@ public class MoviesController : Controller
     {
         if (ModelState.IsValid)
         {
+            // ⭐ Auto‑fetch poster if empty
+            if (string.IsNullOrWhiteSpace(movie.PosterUrl))
+            {
+                var autoPoster = await _tmdb.GetPosterUrlAsync(movie.Title);
+                if (autoPoster != null)
+                    movie.PosterUrl = autoPoster;
+            }
+
             _context.Add(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
         ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
@@ -84,6 +94,7 @@ public class MoviesController : Controller
         var movie = await _context.Movies.FindAsync(id);
         if (movie == null)
             return NotFound();
+
         ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
@@ -97,10 +108,19 @@ public class MoviesController : Controller
 
         if (ModelState.IsValid)
         {
+            // ⭐ Auto‑fetch poster if empty
+            if (string.IsNullOrWhiteSpace(movie.PosterUrl))
+            {
+                var autoPoster = await _tmdb.GetPosterUrlAsync(movie.Title);
+                if (autoPoster != null)
+                    movie.PosterUrl = autoPoster;
+            }
+
             _context.Update(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
         ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Name", movie.GenreId);
         return View(movie);
     }
