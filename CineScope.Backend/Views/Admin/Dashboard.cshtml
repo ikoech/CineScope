@@ -1,23 +1,68 @@
-﻿@{
+﻿@using CineScope.Backend.Models.ViewModels
+@model AdminDashboardViewModel
+
+@{
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h1>Admin Dashboard</h1>
+<h2 class="mb-4">Admin Dashboard</h2>
 
-<p>Welcome, Admin! This is your control panel.</p>
+<div class="row g-4">
 
-<ul>
-    <li>
-        <a asp-controller="Admin" asp-action="ManageMovies">
-            Manage Movies
-        </a>
-    </li>
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Total Movies</h4>
+            <h2>@Model.TotalMovies</h2>
+        </div>
+    </div>
 
-    <li>
-        <a asp-controller="Admin" asp-action="ManageUsers">
-            Manage Users
-        </a>
-    </li>
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Total Users</h4>
+            <h2>@Model.TotalUsers</h2>
+        </div>
+    </div>
 
-    <li><strong>Moderate Reviews</strong> (coming soon)</li>
-</ul>
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Total Reviews</h4>
+            <h2>@Model.TotalReviews</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Total Ratings</h4>
+            <h2>@Model.TotalRatings</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Total Favorites</h4>
+            <h2>@Model.TotalFavorites</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>New Users Today</h4>
+            <h2>@Model.NewUsersToday</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>New Reviews Today</h4>
+            <h2>@Model.NewReviewsToday</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center p-3">
+            <h4>Movies Added This Month</h4>
+            <h2>@Model.MoviesThisMonth</h2>
+        </div>
+    </div>
+
+</div>

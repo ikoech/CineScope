@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CineScope.Backend.Migrations
 {
     [DbContext(typeof(CineScopeBackendContext))]
-    partial class CineScopeBackendContextModelSnapshot : ModelSnapshot
+    [Migration("20260605092048_AddReviews")]
+    partial class AddReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace CineScope.Backend.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -99,9 +99,6 @@ namespace CineScope.Backend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -288,33 +285,6 @@ namespace CineScope.Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("Review", b =>
                 {
                     b.Property<int>("Id")
@@ -417,29 +387,10 @@ namespace CineScope.Backend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rating", b =>
-                {
-                    b.HasOne("CineScope.Backend.Models.Movie", "Movie")
-                        .WithMany("Ratings")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CineScope.Backend.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Review", b =>
                 {
                     b.HasOne("CineScope.Backend.Models.Movie", "Movie")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -453,13 +404,6 @@ namespace CineScope.Backend.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CineScope.Backend.Models.Movie", b =>
-                {
-                    b.Navigation("Ratings");
-
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

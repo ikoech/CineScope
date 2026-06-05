@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
-            /* Ensure footer stays at bottom */
             html, body {
                 height: 100%;
             }
@@ -65,14 +64,14 @@
 
 <body>
 
-    <!-- Dark Mode Toggle Button -->
+    <!-- ⭐ Dark Mode Toggle Button -->
     <button id="darkToggle"
             class="btn btn-dark rounded-circle shadow position-fixed"
             style="top: 90px; right: 20px; width: 48px; height: 48px; z-index: 999;">
         🌙
     </button>
 
-    <!-- NAVBAR -->
+    <!-- ⭐ NAVBAR -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
             <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
@@ -85,9 +84,10 @@
 
             <div class="collapse navbar-collapse" id="cineNavbar">
 
-                <!-- Left Menu -->
+                <!-- LEFT MENU -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+                    <!-- ⭐ Member Menu -->
                     @if (User.IsInRole("Member"))
                     {
                         <li class="nav-item">
@@ -95,6 +95,44 @@
                         </li>
                     }
 
+                    <!-- ⭐ Admin Dropdown -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin Panel
+                            </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">
+                                        Dashboard
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-controller="AdminReviews" asp-action="Index">
+                                        Moderate Reviews
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Movies" asp-action="Index">
+                                        Manage Movies
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-controller="AdminUsers" asp-action="Index">
+                                        Manage Users
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+
+                    <!-- ⭐ Standard Pages -->
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
@@ -104,32 +142,32 @@
                     </li>
                 </ul>
 
-                <!-- Search -->
+                <!-- ⭐ SEARCH BAR -->
                 <form class="d-flex me-3" method="get" asp-controller="Movies" asp-action="Index">
                     <input class="form-control me-2" type="search" name="search" placeholder="Search movies...">
                     <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
 
-                <!-- Login / Register / Logout -->
+                <!-- ⭐ LOGIN / REGISTER / LOGOUT -->
                 <partial name="_LoginPartial" />
 
             </div>
         </nav>
     </header>
 
-    <!-- MAIN CONTENT -->
+    <!-- ⭐ MAIN CONTENT -->
     <main class="container mt-4">
         @RenderBody()
     </main>
 
-    <!-- FOOTER (always at bottom) -->
+    <!-- ⭐ FOOTER -->
     <footer class="footer py-3 text-center mt-auto">
         <div class="container">
             <span>&copy; 2026 - CineScope</span>
         </div>
     </footer>
 
-    <!-- Dark Mode Script -->
+    <!-- ⭐ DARK MODE SCRIPT -->
     <script>
             const toggleBtn = document.getElementById("darkToggle");
 

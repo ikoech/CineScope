@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CineScope.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CineScope.Backend.Models.ViewModels;
 
 [Authorize(Roles = "Admin")]
 public class AdminController : Controller
@@ -17,11 +18,34 @@ public class AdminController : Controller
     }
 
     // Admin Dashboard
-    public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
+    {
+        var model = new AdminDashboardViewModel
+        {
+            TotalMovies = await _context.Movies.CountAsync(),
+            TotalUsers = await _context.Users.CountAsync(),
+            TotalReviews = await _context.Reviews.CountAsync(),
+            TotalRatings = await _context.Ratings.CountAsync(),
+            TotalFavorites = await _context.FavoriteMovies.CountAsync(),
+
+            NewUsersToday = await _context.Users
+                .CountAsync(u => u.CreatedAt.Date == DateTime.Today),
+
+            NewReviewsToday = await _context.Reviews
+                .CountAsync(r => r.CreatedAt.Date == DateTime.Today),
+
+            MoviesThisMonth = await _context.Movies
+                .CountAsync(m => m.CreatedAt.Month == DateTime.Now.Month &&
+                                 m.CreatedAt.Year == DateTime.Now.Year)
+        };
+
+        return View(model);
+    }
+    /*public IActionResult Dashboard()
     {
         return View();
     }
-
+    */
     // Manage Movies
     public async Task<IActionResult> ManageMovies()
     {

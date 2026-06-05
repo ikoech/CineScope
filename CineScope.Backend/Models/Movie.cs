@@ -13,4 +13,9 @@ public class Movie
 
     public string? PosterUrl { get; set; }
     public string? Description { get; set; }
+    public ICollection<Review>? Reviews { get; set; }
+    public ICollection<Rating>? Ratings { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+
 }

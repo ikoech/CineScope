@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Review>
+
+@{
+    ViewData["Title"] = "Moderate Reviews";
+}
+
+<h2 class="mb-4">Moderate Reviews</h2>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Movie</th>
+            <th>User</th>
+            <th>Review</th>
+            <th>Date</th>
+            <th style="width: 120px;"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Movie.Title</td>
+                <td>@r.User.UserName</td>
+                <td>@r.Content</td>
+                <td>@r.CreatedAt.ToShortDateString()</td>
+
+                <td>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@r.Id" />
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

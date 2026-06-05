@@ -1,78 +1,126 @@
 @model CineScope.Backend.Models.Movie
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Movie Details";
 }
 
-<h1>Movie Details</h1>
+<h2>Movie Details</h2>
 
-<div>
-    <h4>@Model.Title</h4>
-    <hr />
+<div class="row mt-4">
+    <div class="col-md-4">
+        <img src="@Model.PosterUrl" alt="@Model.Title poster"
+             class="img-fluid rounded" />
+    </div>
 
-    <dl class="row">
+    <div class="col-md-8">
+        <h3>@Model.Title</h3>
 
-        <dt class="col-sm-2">Genre</dt>
-        <dd class="col-sm-10">@Model.Genre</dd>
+        <p><strong>Genre:</strong> @Model.Genre</p>
+        <p><strong>Release Year:</strong> @Model.ReleaseYear</p>
+        <p><strong>Rating:</strong> @Model.Rating</p>
+        <p><strong>Duration:</strong> @Model.Duration min</p>
 
-        <dt class="col-sm-2">Release Year</dt>
-        <dd class="col-sm-10">@Model.ReleaseYear</dd>
+        <p class="mt-3">@Model.Description</p>
 
-        <dt class="col-sm-2">Rating</dt>
-        <dd class="col-sm-10">@Model.Rating</dd>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
+        {
+            <form asp-controller="Favorites" asp-action="Add" method="post" class="mt-3">
+                <input type="hidden" name="movieId" value="@Model.Id" />
+                <button class="btn btn-warning">
+                    ⭐ Add to Favorites
+                </button>
+            </form>
+        }
 
-        <dt class="col-sm-2">Duration</dt>
-        <dd class="col-sm-10">@Model.Duration min</dd>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
+        {
+            <h4 class="mt-4">Rate This Movie</h4>
 
-        <dt class="col-sm-2">Poster</dt>
-        <dd class="col-sm-10">
-            <img src="@Model.PosterUrl" alt="Poster" style="max-width:200px;" />
-        </dd>
+            <form asp-controller="Ratings" asp-action="Rate" method="post">
+                <input type="hidden" name="movieId" value="@Model.Id" />
 
-        <dt class="col-sm-2">Description</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
+                <select name="score" class="form-select" style="max-width: 150px;">
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i">@i / 10</option>
+                    }
+                </select>
 
-    </dl>
+                <button class="btn btn-primary mt-2">Submit Rating</button>
+            </form>
+        }
+
+        @if (Model.Ratings != null && Model.Ratings.Any())
+        {
+            var avg = Model.Ratings.Average(r => r.Score);
+            <p class="mt-3"><strong>Average Rating:</strong> @avg.ToString("0.0") / 10</p>
+        }
+        else
+        {
+            <p class="text-muted mt-3">No ratings yet.</p>
+        }
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
+        {
+            var myRating = Model.Ratings.FirstOrDefault(r => r.User?.UserName == User.Identity.Name);
+
+            if (myRating != null)
+            {
+                <p class="text-info">Your Rating: @myRating.Score / 10</p>
+            }
+        }
+
+
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
+    </div>
 </div>
 
-<hr />
+<hr class="mt-5" />
 
-<!--  Add to Favorites Form -->
+<h3>Reviews</h3>
+
+@if (Model.Reviews != null && Model.Reviews.Any())
+{
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="card my-3">
+            <div class="card-body">
+                <p>@review.Content</p>
+                <small class="text-muted">
+                    Posted by @review.User?.UserName on @review.CreatedAt.ToShortDateString()
+                </small>
+
+                @if (User.Identity.IsAuthenticated
+                    && User.IsInRole("Member")
+                    && review.User?.UserName == User.Identity.Name)
+                {
+                    <form asp-controller="Reviews" asp-action="Delete" method="post" class="mt-2">
+                        <input type="hidden" name="id" value="@review.Id" />
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-muted">No reviews yet. Be the first to write one!</p>
+}
+
 @if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
 {
-    <form asp-controller="Favorites" asp-action="Add" method="post">
+    <h4 class="mt-4">Write a Review</h4>
+
+    <form asp-controller="Reviews" asp-action="Add" method="post">
         <input type="hidden" name="movieId" value="@Model.Id" />
 
-        <!-- ⭐ Clean, modern favorites button -->
-        <button class="btn btn-warning mt-3">
-            ⭐ Add to Favorites
-        </button>
+        <textarea name="content" class="form-control" rows="3" placeholder="Write your review..."></textarea>
+
+        <button class="btn btn-primary mt-2">Submit Review</button>
     </form>
 }
-
-
-<!--  Member + Admin actions -->
-@if (User.IsInRole("Member") || User.IsInRole("Admin"))
+else
 {
-    <div class="mb-3">
-        <a class="btn btn-primary me-2">Write Review</a>
-        <a class="btn btn-outline-warning me-2">Add to Favorites</a>
-        <a class="btn btn-outline-info">Rate Movie</a>
-    </div>
+    <p class="text-muted mt-3">Login as a Member to write a review.</p>
 }
-
-<!--  Admin-only actions -->
-@if (User.IsInRole("Admin"))
-{
-    <div class="mb-3">
-        <a class="btn btn-warning me-2" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-
-        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
-            <button class="btn btn-danger">Delete</button>
-        </form>
-    </div>
-}
-
-<div>
-    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
-</div>
