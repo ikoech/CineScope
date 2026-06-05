@@ -1,11 +1,9 @@
-
-using CineScope.Backend.Data;
-using CineScope.Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CineScope.Backend.Data;
+using CineScope.Backend.Models;
 
-[Authorize(Roles = "Admin")]
 public class MoviesController : Controller
 {
     private readonly CineScopeBackendContext _context;
@@ -15,13 +13,18 @@ public class MoviesController : Controller
         _context = context;
     }
 
-    // GET: MOVIES
-    public async Task<IActionResult> Index(string? search)    
+    // ============================
+    // PUBLIC PAGES (Everyone)
+    // ============================
+
+    // Public movie list
+    [AllowAnonymous]
+    public async Task<IActionResult> Index(string search)
     {
         var movies = from m in _context.Movies
                      select m;
 
-        if (!string.IsNullOrWhiteSpace(search))
+        if (!string.IsNullOrEmpty(search))
         {
             movies = movies.Where(m => m.Title.Contains(search));
         }
@@ -29,34 +32,34 @@ public class MoviesController : Controller
         return View(await movies.ToListAsync());
     }
 
-    // GET: MOVIES/Details/5
+    // Public movie details
+    [AllowAnonymous]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var movie = await _context.Movies
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
+
         if (movie == null)
-        {
             return NotFound();
-        }
 
         return View(movie);
     }
 
-    // GET: MOVIES/Create
+    // ============================
+    // ADMIN‑ONLY ACTIONS
+    // ============================
+
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: MOVIES/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,Rating,Duration,PosterUrl,Description")] Movie movie)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create(Movie movie)
     {
         if (ModelState.IsValid)
         {
@@ -67,90 +70,59 @@ public class MoviesController : Controller
         return View(movie);
     }
 
-    // GET: MOVIES/Edit/5
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var movie = await _context.Movies.FindAsync(id);
         if (movie == null)
-        {
             return NotFound();
-        }
+
         return View(movie);
     }
 
-    // POST: MOVIES/Edit/5
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,ReleaseYear,Rating,Duration,PosterUrl,Description")] Movie movie)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(int id, Movie movie)
     {
         if (id != movie.Id)
-        {
             return NotFound();
-        }
 
         if (ModelState.IsValid)
         {
-            try
-            {
-                _context.Update(movie);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(movie.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Update(movie);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         return View(movie);
     }
 
-    // GET: MOVIES/Delete/5
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var movie = await _context.Movies
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
         if (movie == null)
-        {
             return NotFound();
-        }
 
         return View(movie);
     }
 
-    // POST: MOVIES/Delete/5
     [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var movie = await _context.Movies.FindAsync(id);
         if (movie != null)
         {
             _context.Movies.Remove(movie);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
-    }
-
-    private bool MovieExists(int? id)
-    {
-        return _context.Movies.Any(e => e.Id == id);
     }
 }

@@ -7,28 +7,75 @@
 
     @if (SignInManager.IsSignedIn(User))
     {
-        <!-- Profile link -->
-        <li class="nav-item">
-            <a class="nav-link text-light" asp-controller="User" asp-action="Profile">
-                Hello, @UserManager.GetUserName(User)!
-            </a>
-        </li>
+        var currentUser = await UserManager.GetUserAsync(User);
+        var avatar = string.IsNullOrEmpty(currentUser.AvatarUrl)
+            ? "/images/avatar-placeholder.png"
+            : currentUser.AvatarUrl;
 
-        <!-- Logout -->
-        <li class="nav-item">
-            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                <button type="submit" class="btn btn-link nav-link text-light">Logout</button>
-            </form>
+        <li class="nav-item dropdown d-flex align-items-center">
+
+            <img src="@avatar"
+                 class="rounded-circle me-2"
+                 style="width:32px; height:32px; object-fit:cover;" />
+
+            <a class="nav-link dropdown-toggle text-light" href="#" id="profileDropdown"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @currentUser.UserName
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+
+                <!-- Profile -->
+                <li>
+                    <a class="dropdown-item" asp-controller="User" asp-action="Profile">
+                        Profile
+                    </a>
+                </li>
+
+                <!-- Settings -->
+                <li>
+                    <a class="dropdown-item" asp-controller="UserSettings" asp-action="Index">
+                        Settings
+                    </a>
+                </li>
+
+                <!-- Admin Panel (Admin only) -->
+                @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">
+                            Admin Panel
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider" /></li>
+                }
+
+                <!-- Identity Account Settings -->
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        Account Settings (Identity)
+                    </a>
+                </li>
+
+                <li><hr class="dropdown-divider" /></li>
+
+                <!-- Logout -->
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                        <button type="submit" class="dropdown-item">Logout</button>
+                    </form>
+                </li>
+
+            </ul>
         </li>
     }
     else
     {
-        <!-- Login -->
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
 
-        <!-- Register -->
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>

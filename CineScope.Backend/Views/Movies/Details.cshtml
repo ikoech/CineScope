@@ -4,63 +4,61 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Movie Details</h1>
 
 <div>
-    <h4>Movie</h4>
+    <h4>@Model.Title</h4>
     <hr />
+
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+
+        <dt class="col-sm-2">Genre</dt>
+        <dd class="col-sm-10">@Model.Genre</dd>
+
+        <dt class="col-sm-2">Release Year</dt>
+        <dd class="col-sm-10">@Model.ReleaseYear</dd>
+
+        <dt class="col-sm-2">Rating</dt>
+        <dd class="col-sm-10">@Model.Rating</dd>
+
+        <dt class="col-sm-2">Duration</dt>
+        <dd class="col-sm-10">@Model.Duration min</dd>
+
+        <dt class="col-sm-2">Poster</dt>
+        <dd class="col-sm-10">
+            <img src="@Model.PosterUrl" alt="Poster" style="max-width:200px;" />
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseYear)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseYear)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PosterUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PosterUrl)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+
     </dl>
 </div>
+
+<hr />
+
+<!-- ⭐ Member + Admin actions -->
+@if (User.IsInRole("Member") || User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a class="btn btn-primary me-2">Write Review</a>
+        <a class="btn btn-outline-warning me-2">Add to Favorites</a>
+        <a class="btn btn-outline-info">Rate Movie</a>
+    </div>
+}
+
+<!-- ⭐ Admin-only actions -->
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a class="btn btn-warning me-2" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+}
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>

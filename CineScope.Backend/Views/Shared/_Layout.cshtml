@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using CineScope.Backend.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,14 +12,56 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+            /* Light Mode */
+            body.light-mode {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            /* Dark Mode */
+            body.dark-mode {
+                background-color: #121212 !important;
+                color: white !important;
+            }
+
+                body.dark-mode .navbar,
+                body.dark-mode footer {
+                    background-color: #1e1e1e !important;
+                    color: white !important;
+                }
+
+                body.dark-mode .nav-link {
+                    color: #ddd !important;
+                }
+
+                body.dark-mode .card,
+                body.dark-mode .movie-card {
+                    background-color: #1e1e1e !important;
+                    color: white !important;
+                }
+
+            /* Footer */
+            footer {
+                background-color: #f8f9fa;
+                color: #333;
+            }
+
+            body.dark-mode footer {
+                background-color: #1e1e1e !important;
+                color: #ddd !important;
+            }
+    </style>
 </head>
 
 <body>
 
-    <!-- ⭐ Dark Mode Toggle -->
-    <button id="darkToggle" class="btn btn-sm btn-dark position-fixed"
-            style="top: 20px; right: 20px; z-index: 999;">
-        Dark Mode
+    <!-- ⭐ Dark Mode Toggle Button -->
+    <button id="darkToggle"
+            class="btn btn-dark rounded-circle shadow position-fixed"
+            style="top: 20px; right: 20px; width: 48px; height: 48px; z-index: 999;">
+        🌙
     </button>
 
     <!-- ⭐ NAVBAR -->
@@ -60,41 +107,30 @@
         </main>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="border-top footer text-muted">
+    <!-- ⭐ FOOTER -->
+    <footer class="footer mt-5 py-3 text-center">
         <div class="container">
-            &copy; 2026 - CineScope
+            <span>&copy; 2026 - CineScope</span>
         </div>
     </footer>
 
     <!-- ⭐ Dark Mode Script -->
-    <style>
-            .dark-mode {
-                background-color: #121212 !important;
-                color: white !important;
-            }
-
-                .dark-mode .navbar,
-                .dark-mode footer {
-                    background-color: #1e1e1e !important;
-                    color: white !important;
-                }
-
-                .dark-mode .nav-link {
-                    color: #ddd !important;
-                }
-
-                .dark-mode .card,
-                .dark-mode .movie-card {
-                    background-color: #1e1e1e !important;
-                    color: white !important;
-                }
-    </style>
-
     <script>
-            const toggle = document.getElementById("darkToggle");
-            toggle.addEventListener("click", () => {
+            const toggleBtn = document.getElementById("darkToggle");
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem("theme") || "dark-mode";
+            document.body.classList.add(savedTheme);
+
+            toggleBtn.addEventListener("click", () => {
                 document.body.classList.toggle("dark-mode");
+                document.body.classList.toggle("light-mode");
+
+                const newTheme = document.body.classList.contains("dark-mode")
+                    ? "dark-mode"
+                    : "light-mode";
+
+                localStorage.setItem("theme", newTheme);
             });
     </script>
 

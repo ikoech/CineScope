@@ -1,0 +1,45 @@
+﻿@model IEnumerable<UserWithRolesViewModel>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h1>Manage Users</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Roles</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.UserName</td>
+                <td>@string.Join(", ", user.Roles)</td>
+
+                <td>
+                    <a class="btn btn-warning btn-sm"
+                       asp-controller="Admin"
+                       asp-action="EditUser"
+                       asp-route-id="@user.Id">
+                        Edit Roles
+                    </a>
+
+                    <a class="btn btn-danger btn-sm"
+                       asp-controller="Admin"
+                       asp-action="DeleteUser"
+                       asp-route-id="@user.Id">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

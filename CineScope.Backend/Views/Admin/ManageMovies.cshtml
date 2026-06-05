@@ -1,0 +1,55 @@
+﻿@model IEnumerable<CineScope.Backend.Models.Movie>
+
+@{
+    ViewData["Title"] = "Manage Movies";
+}
+
+<h1>Manage Movies</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>Rating</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Genre</td>
+                <td>@movie.ReleaseYear</td>
+                <td>@movie.Rating</td>
+
+                <td>
+                    <a class="btn btn-warning btn-sm"
+                       asp-controller="Movies"
+                       asp-action="Edit"
+                       asp-route-id="@movie.Id">
+                        Edit
+                    </a>
+
+                    <a class="btn btn-info btn-sm"
+                       asp-controller="Movies"
+                       asp-action="Details"
+                       asp-route-id="@movie.Id">
+                        Details
+                    </a>
+
+                    <form asp-controller="Movies"
+                          asp-action="Delete"
+                          asp-route-id="@movie.Id"
+                          method="post"
+                          style="display:inline;">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
